@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="cv4Usv" name="PFMProject0" projectType="audioplug" jucerVersion="5.4.5"
-              pluginCharacteristicsValue="pluginIsSynth" pluginFormats="buildAU,buildStandalone,buildVST,buildVST3">
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" pluginAUMainType="'aumu'">
   <MAINGROUP id="bHKvNA" name="PFMProject0">
     <GROUP id="{2A21DFEC-DC00-D807-0C4A-19AD11AE46F7}" name="Source">
       <FILE id="TObRQV" name="PluginProcessor.cpp" compile="1" resource="0"

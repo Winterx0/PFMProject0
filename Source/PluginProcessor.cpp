@@ -21,9 +21,21 @@ Pfmproject0AudioProcessor::Pfmproject0AudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
 #endif
+apvts(*this, nullptr)
 {
+   //     shouldPlaySound = new AudioParameterBool("ShouldPlaySoundParam", "shouldPlaySound", false);
+   // addParameter(shouldPlaySound);
+    auto shouldPlaySoundParam = std::make_unique<AudioParameterBool>("ShouldPlaySoundParam", "shouldPlaySound", false);
+    auto* param = apvts.createAndAddParameter(std::move(shouldPlaySoundParam));
+    shouldPlaySound = dynamic_cast<AudioParameterBool*>(param);
+    auto byColorParam = std::make_unique<AudioParameterFloat>("Background color", "Background color", 0.f, 1.f, 0.5f);
+    param = apvts.createAndAddParameter(std::move(byColorParam));
+    byColor = dynamic_cast<AudioParameterFloat*>(param);
+    apvts.state = ValueTree("PFMSynthValueTree");
+  
+    //AudioParameterFloat
 }
 
 Pfmproject0AudioProcessor::~Pfmproject0AudioProcessor()
@@ -156,12 +168,12 @@ void Pfmproject0AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBu
 
         // ..do something to the data...
   //  }
-    Random r;  //DSP code example
+ //DSP code example
     for (int i = 0; i < buffer.getNumSamples(); ++i)
     {
         for(int channel = 0; channel < buffer.getNumChannels(); ++channel)
         {
-            if(shouldPlaySound)
+            if(shouldPlaySound->get())
             {
                 buffer.setSample(channel, i, r.nextFloat());
             }
@@ -190,17 +202,35 @@ void Pfmproject0AudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    DBG(apvts.state.toXmlString());
+    MemoryOutputStream mos(destData, false);
+    apvts.state.writeToStream(mos);
 }
 
 void Pfmproject0AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    ValueTree tree = ValueTree::readFromData(data, sizeInBytes);
+    if(tree.isValid())
+    {
+        apvts.state = tree;
+    }
+    DBG(apvts.state.toXmlString());
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    /*MemoryBlock mb(data, static_cast<size_t>(sizeInBytes));
+    MemoryInputStream mis(mb, false);
+    apvts.state.readFromStream(mis); */
 }
-
+void Pfmproject0AudioProcessor::UpdateAutomatableParameter(RangedAudioParameter* param, float value)
+{
+    param->beginChangeGesture();
+    param->setValueNotifyingHost(value);
+    param->endChangeGesture();
+}
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new Pfmproject0AudioProcessor();
 }
+
