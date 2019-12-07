@@ -64,9 +64,12 @@ void BufferAnalyzer::run()
         
         auto index = !firstBuffer.get() ? 0 : 1;
         
+        auto* readPtr = buffer[index].getReadPointer(0);
+        
+        
         for(int i = 0; i < samplesCopied[index]; ++i)
         {
-            pushNextSampleIntoFifo(buffer[index].getSample(0, i));
+            pushNextSampleIntoFifo(*(readPtr + i)); //pushNextSampleIntoFifo(buffer[index].getSample(0, i));
         }
     }
 }
