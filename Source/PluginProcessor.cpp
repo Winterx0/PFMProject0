@@ -168,13 +168,22 @@ void BufferAnalyzer::paint(Graphics& g)
     auto colors = std::vector<Colour>
     {
         Colours::white,
+        Colours::lightsalmon,
         Colours::pink,
+        Colours::indianred,
         Colours::red,
+        Colours::orangered,
         Colours::orange,
+        Colours::lightyellow,
         Colours::yellow,
+        Colours::limegreen,
         Colours::green,
+        Colours::paleturquoise,
+        Colours::cyan,
         Colours::blue,
+        Colours::rebeccapurple,
         Colours::violet,
+        Colours::palevioletred,
         Colours::black
     };
     

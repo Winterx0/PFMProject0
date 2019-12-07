@@ -12,7 +12,41 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+//==============================================================================
 
+template<typename T>
+struct Fifo
+{
+    bool push(const T& itemToAdd)
+    {
+        auto write = fifo.write(1);
+        if(write.blockSize1 <= 1)
+        {
+            buffer[write.startIndex1] = itemToAdd;
+            return true;
+        }
+        return false;
+        
+    }
+    bool pull(T& itemToUpdate)
+    {
+        auto read = fifo.read(1);
+        if(read.blockSize1 <= 1)
+        {
+            itemToUpdate = buffer[read.startIndex1];
+            return true;
+        }
+        return false;
+        
+    }
+    
+private:
+    static constexpr int Capacity = 5;
+    std::array<T, Capacity> buffer;
+    AbstractFifo fifo{Capacity};
+    
+    
+};
 
 //==============================================================================
 #include <array>
