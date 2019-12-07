@@ -18,6 +18,13 @@ Pfmproject0AudioProcessorEditor::Pfmproject0AudioProcessorEditor (Pfmproject0Aud
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     cacheByColor = processor.byColor->get();
+    
+    addAndMakeVisible(processor.leftBufferAnalyzer);
+    addAndMakeVisible(processor.rightBufferAnalyzer);
+
+processor.leftBufferAnalyzer.setInterceptsMouseClicks(false, false);
+processor.rightBufferAnalyzer.setInterceptsMouseClicks(false, false);
+    
     setSize (400, 300);
     
     startTimerHz(24);
@@ -55,12 +62,17 @@ void Pfmproject0AudioProcessorEditor::paint (Graphics& g)
 
 void Pfmproject0AudioProcessorEditor::resized()
 {
+    
+    processor.leftBufferAnalyzer.setBounds(0, 0, getWidth(), getHeight() * 0.5);
+    
+    processor.rightBufferAnalyzer.setBounds(0, getHeight() * 0.5, getWidth(), getHeight() * 0.5);
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 }
 void Pfmproject0AudioProcessorEditor::mouseUp(const MouseEvent &e)
 {
-    //Pfmproject0AudioProcessor::UpdateAutomatableParameter(processor.shouldPlaySound, !processor.shouldPlaySound->get());
+   
+Pfmproject0AudioProcessor::UpdateAutomatableParameter(processor.shouldPlaySound, !processor.shouldPlaySound->get());
    // processor.shouldPlaySound->beginChangeGesture();
     //processor.shouldPlaySound->setValueNotifyingHost( !processor.shouldPlaySound->get());
     //processor.shouldPlaySound->endChangeGesture();
